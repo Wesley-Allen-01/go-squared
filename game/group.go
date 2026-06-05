@@ -40,5 +40,5 @@ func CountLiberties(b *Board, group []Point) int {
 }
 
 func IsCaptured(b *Board, group []Point) bool {
-	return false
+	return CountLiberties(b, group) == 0
 }
