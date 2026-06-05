@@ -10,7 +10,18 @@ type Game struct {
 }
 
 func NewGame(size int) *Game {
-	return nil
+	board := &Board{size, make([][]Color, size)}
+	for i := range board.Cells {
+		board.Cells[i] = make([]Color, Empty)
+	}
+	return &Game{
+		Board:     board,
+		Current:   Black,
+		Captures:  make(map[Color]int),
+		Passes:    0,
+		PrevBoard: nil,
+		Over:      false,
+	}
 }
 
 func (g *Game) PlaceStone(p Point) error {
@@ -21,6 +32,8 @@ func (g *Game) Pass() {
 }
 
 func (g *Game) Resign() {
+	g.Over = true
+	//NewGame(9)
 }
 
 func (g *Game) SwitchPlayer() {
