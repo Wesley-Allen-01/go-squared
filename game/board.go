@@ -13,6 +13,14 @@ type Point struct {
 	Col int
 }
 
+//Point.isValid => returns whether a point is a valid point in a board
+func (p Point) isValid(boardSize int) bool {
+	if p.Row < 0 || p.Row >= boardSize || p.Col < 0 || p.Col >= boardSize {
+		return false
+	}
+	return true
+}
+
 func (p Point) Neighbors() []Point {
 	return []Point{
 		{p.Row - 1, p.Col}, 
@@ -21,6 +29,7 @@ func (p Point) Neighbors() []Point {
 		{p.Row, p.Col + 1}, 
 	}
 }
+
 
 type Board struct {
 	Size  int
@@ -35,12 +44,27 @@ func NewBoard(size int) *Board {
 	return &Board{Size: size, Cells: cells}
 }
 
+//Get: returns the color of the point provided as arg
+// func (b *Board) Get(p Point) Color {
+//	 return b.Cells[p.Row][p.Col]
+// }
 func (b *Board) Get(p Point) Color {
 	return b.Cells[p.Row][p.Col]
 }
 
-func (b * Board) Set(p Point, c Color) {
+func (b *Board) Set(p Point, c Color) {
 	b.Cells[p.Row][p.Col] = c
+}
+
+func (b *Board) getNeighbors(p Point) []Point {
+	neighbors := []Point{}
+
+	for _, neighbor := range p.Neighbors() {
+		if neighbor.isValid(b.Size) {
+			neighbors = append(neighbors, neighbor)
+		}
+	}
+	return neighbors
 }
 
 func (b *Board) Snapshot() [][]Color {

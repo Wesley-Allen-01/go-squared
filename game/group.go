@@ -8,45 +8,37 @@ func FindGroup(b *Board, p Point) []Point {
 	}
 	visited := make(map[Point]bool)
 	var dfs func(Point)
-	dfs = func(Point) []Point {
-		if visi
+	dfs = func(pt Point) {
+		if visited[pt] == true {
+			return
+		}
+		visited[pt] = true
+
+		if b.Get(pt) != color {
+			return
+		}
+		group = append(group, pt)
+		for _, neighbor := range b.getNeighbors(pt) {
+			dfs(neighbor)
+		}	
 	}
-
-
+	dfs(p)
+	return group
 }
 
 func CountLiberties(b *Board, group []Point) int {
-	return 0
+	neighborSet := make(map[Point]bool)
+
+	for _, pt := range group {
+		for _, neighbor := range b.getNeighbors(pt) {
+			if b.Get(neighbor) == Empty {
+				neighborSet[neighbor] = true
+			}
+		}
+	}
+	return len(neighborSet)
 }
 
 func IsCaptured(b *Board, group []Point) bool {
 	return false
 }
-
-
-
-
-
-
-/*
-
-	visited := make(map[Point]bool)
-	var dfs func(Point)
-	dfs = func(pt Point) {
-		if visited[pt] {
-			return
-		}
-		visited[pt] = true
-		if b.Get(pt) != color {
-			return
-		}
-		group = append(group, pt)
-		for _, neighbor := range pt.Neighbors() {
-			if neighbor.Row >= 0 && neighbor.Row < b.Size && neighbor.Col >= 0 && neighbor.Col < b.Size {
-				dfs(neighbor)
-			}
-		}
-	}
-	dfs(p)
-	return group
-*/
