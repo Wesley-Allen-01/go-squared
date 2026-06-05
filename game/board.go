@@ -12,6 +12,16 @@ type Point struct {
 	Row int
 	Col int
 }
+
+func (p Point) Neighbors() []Point {
+	return []Point{
+		{p.Row - 1, p.Col}, 
+		{p.Row + 1, p.Col}, 
+		{p.Row, p.Col - 1}, 
+		{p.Row, p.Col + 1}, 
+	}
+}
+
 type Board struct {
 	Size  int
 	Cells [][]Color
@@ -34,7 +44,12 @@ func (b * Board) Set(p Point, c Color) {
 }
 
 func (b *Board) Snapshot() [][]Color {
-	return b.Cells
+	snapshot := make([][]Color, b.Size)
+	for i := range snapshot {
+		snapshot[i] = make([]Color, b.Size)
+		copy(snapshot[i], b.Cells[i])
+	}
+	return snapshot
 }
 
 
