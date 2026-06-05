@@ -53,30 +53,38 @@ go run main.go
 
 Run all tests:
 ```
-go test ./game/...
-```
-
-Run tests with verbose output:
-```
 go test ./game/... -v
 ```
 
-Run a single test by name:
+
+### Tests by File
+
+**board.go**
 ```
-go test ./game/... -run TestNewBoard
+go test ./game/... -run "TestNewBoard|TestBoard" -v
 ```
 
-Run a group of tests by prefix:
+**group.go**
 ```
-go test ./game/... -run TestBoard
-```
-
-Run tests matching a pattern (regex):
-```
-go test ./game/... -run "TestPlace|TestPass"
+go test ./game/... -run "TestFindGroup|TestCountLiberties|TestIsCaptured" -v
 ```
 
-Run tests in a specific file (by matching the names of tests in that file):
+**rules.go**
 ```
-go test ./game/... -run "TestNewBoard|TestBoardGetSet|TestBoardSnapshot"
+go test ./game/... -run "TestInBounds|TestIsEmpty|TestCheckSuicide|TestCheckKo" -v
+```
+
+**capture.go**
+```
+go test ./game/... -run "TestRemoveGroup|TestCheckCaptures" -v
+```
+
+**scoring.go**
+```
+go test ./game/... -run "TestCountTerritory|TestFinalScore|TestWinner" -v
+```
+
+**game.go**
+```
+go test ./game/... -run "TestNewGame|TestPlaceStone|TestPass|TestTwoConsecutive|TestResign|TestSwitchPlayer" -v
 ```
