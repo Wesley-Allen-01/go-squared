@@ -1,5 +1,7 @@
 package game
 
+import "fmt"
+
 type Game struct {
 	Board     *Board
 	Current   Color
@@ -10,10 +12,7 @@ type Game struct {
 }
 
 func NewGame(size int) *Game {
-	board := &Board{size, make([][]Color, size)}
-	for i := range board.Cells {
-		board.Cells[i] = make([]Color, Empty)
-	}
+	board := NewBoard(size)
 	return &Game{
 		Board:     board,
 		Current:   Black,
@@ -25,11 +24,48 @@ func NewGame(size int) *Game {
 }
 
 func (g *Game) PlaceStone(p Point) error {
+	if !InBounds(g.Board, p) {
+		return fmt.Errorf("invalid move: point out of bounds")
+	}
+
+	if !IsEmpty(g.Board, p) {
+		return fmt.Errorf("invalid move: point is occupied")
+	}
+	previous := g.Board.Snapshot()
+
+	g.Board.Set(p, g.Current)
+
+	opponent := White
+	if g.Current == White {
+		opponent = Black
+	}
+
+	captured := CheckCaptures(g.Board, p, opponent)
+
+	if IsCaptured(g.Board, FindGroup(g.Board, p)) {
+		g.Board.Cells = previous
+		return fmt.Errorf("invalid move: suicide")
+	}
+
+	if CheckKo(g, g.Board.Snapshot()) {
+		g.Board.Cells = previous
+		return fmt.Errorf("invalid move: ko")
+	}
+	g.Captures[g.Current] += captured
+	g.PrevBoard = previous
+	g.Passes = 0
+	g.SwitchPlayer()
 	return nil
 }
 
 func (g *Game) Pass() {
+	g.Passes += 1
+	if g.Passes == 2 {
+		g.Over = true
+		return
+	}
 	g.SwitchPlayer()
+
 }
 
 func (g *Game) Resign() {

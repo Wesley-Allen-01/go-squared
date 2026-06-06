@@ -19,6 +19,9 @@ func TestCountTerritoryBlack(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		b.Set(Point{i, 8}, Black)
 	}
+	for i := 0; i < 9; i++ {
+		b.Set(Point{3, i}, White)
+	}
 	black, _ := CountTerritory(b)
 	if black != 16 {
 		t.Errorf("expected 16 black territory points, got %d", black)
@@ -48,5 +51,72 @@ func TestWinnerBlack(t *testing.T) {
 func TestWinnerWhite(t *testing.T) {
 	if Winner(40, 49.5) != "White" {
 		t.Error("expected White to win with score 40 vs 49.5")
+	}
+}
+
+func TestComplexTerritoryFinalScoreAndWinner(t *testing.T) {
+	b := NewBoard(9)
+
+	layout := []string{
+		"...B.....",
+		"...B.....",
+		"...B.WWWW",
+		"BBBBW...W",
+		"....W...W",
+		"BBBBWWWWW",
+		"...B.W...",
+		"...B.W...",
+		"...B.W...",
+	}
+
+	for r, row := range layout {
+		for c, ch := range row {
+			p := Point{Row: r, Col: c}
+
+			switch ch {
+			case 'B':
+				b.Set(p, Black)
+			case 'W':
+				b.Set(p, White)
+			case '.':
+				b.Set(p, Empty)
+			default:
+				t.Fatalf("invalid board character %q at row %d col %d", ch, r, c)
+			}
+		}
+	}
+
+	g := &Game{
+		Board:    b,
+		Current:  Black,
+		Captures: map[Color]int{Black: 4, White: 2},
+		Passes:   0,
+		Over:     false,
+	}
+
+	blackTerritory, whiteTerritory := CountTerritory(g.Board)
+
+	if blackTerritory != 18 {
+		t.Errorf("expected 18 black territory points, got %d", blackTerritory)
+	}
+
+	if whiteTerritory != 15 {
+		t.Errorf("expected 15 white territory points, got %d", whiteTerritory)
+	}
+
+	blackScore, whiteScore := FinalScore(g, 6.5)
+
+	if blackScore != 22.0 {
+		t.Errorf("expected black score 22.0, got %.1f", blackScore)
+	}
+
+	if whiteScore != 23.5 {
+		t.Errorf("expected white score 23.5, got %.1f", whiteScore)
+	}
+
+	winner := Winner(blackScore, whiteScore)
+
+	if winner != "White" {
+		t.Errorf("expected White to win, got %s", winner)
 	}
 }
