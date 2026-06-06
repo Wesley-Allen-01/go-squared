@@ -29,6 +29,7 @@ func (g *Game) PlaceStone(p Point) error {
 }
 
 func (g *Game) Pass() {
+	g.SwitchPlayer()
 }
 
 func (g *Game) Resign() {
@@ -37,4 +38,9 @@ func (g *Game) Resign() {
 }
 
 func (g *Game) SwitchPlayer() {
+	if g.Current == Black {
+		g.Current = White
+	} else {
+		g.Current = Black
+	}
 }

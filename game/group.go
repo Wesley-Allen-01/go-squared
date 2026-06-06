@@ -20,7 +20,7 @@ func FindGroup(b *Board, p Point) []Point {
 		group = append(group, pt)
 		for _, neighbor := range b.getNeighbors(pt) {
 			dfs(neighbor)
-		}	
+		}
 	}
 	dfs(p)
 	return group
