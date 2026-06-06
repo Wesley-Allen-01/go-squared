@@ -56,6 +56,7 @@ func (b *Board) Set(p Point, c Color) {
 	b.Cells[p.Row][p.Col] = c
 }
 
+// Returns the number of valid neighbors on a board
 func (b *Board) getNeighbors(p Point) []Point {
 	neighbors := []Point{}
 
