@@ -10,6 +10,7 @@ func IsEmpty(b *Board, p Point) bool {
 	return b.Get(p) == Empty
 }
 
+// note to self, this function can be cleaned with inversion
 func CheckSuicide(b *Board, p Point, color Color) bool {
 	b.Set(p, color)
 	if IsCaptured(b, FindGroup(b, p)) {
