@@ -47,8 +47,20 @@ func CountTerritory(b *Board) (int, int) {
 
 func FinalScore(g *Game, komi float64) (float64, float64) {
 	bterr, wterr := CountTerritory(g.Board)
-	black_score := float64(bterr + g.Captures[Black])
-	white_score := float64(wterr+g.Captures[White]) + komi
+	btile, wtile := 0, 0
+	for r := 0; r < g.Board.Size; r++ {
+		for c := 0; c < g.Board.Size; c++ {
+			p := Point{r, c}
+			if g.Board.Get(p) == Black {
+				btile++
+			}
+			if g.Board.Get(p) == White {
+				wtile++
+			}
+		}
+	}
+	black_score := float64(bterr + btile)
+	white_score := float64(wterr + wtile) + komi
 	return black_score, white_score
 }
 

@@ -30,8 +30,13 @@ func TestCountTerritoryBlack(t *testing.T) {
 
 func TestFinalScore(t *testing.T) {
 	g := NewGame(9)
-	g.Captures[Black] = 3
-	g.Captures[White] = 1
+	b := NewBoard(9)
+	for i := 0; i < 3; i++ {
+		b.Set(Point{i, 8}, Black)
+	}
+	for i := 0; i < 1; i++ {
+		b.Set(Point{i, 4}, White)
+	}
 	black, white := FinalScore(g, 6.5)
 	// empty board: territory is 0 for both; scores are captures + komi
 	if black != 3.0 {
@@ -87,11 +92,10 @@ func TestComplexTerritoryFinalScoreAndWinner(t *testing.T) {
 	}
 
 	g := &Game{
-		Board:    b,
-		Current:  Black,
-		Captures: map[Color]int{Black: 4, White: 2},
-		Passes:   0,
-		Over:     false,
+		Board:   b,
+		Current: Black,
+		Passes:  0,
+		Over:    false,
 	}
 
 	blackTerritory, whiteTerritory := CountTerritory(g.Board)
