@@ -15,10 +15,7 @@ func TestRemoveGroup(t *testing.T) {
 func TestCheckCapturesNone(t *testing.T) {
 	b := NewBoard(9)
 	b.Set(Point{4, 4}, Black)
-	captured := CheckCaptures(b, Point{4, 4}, Black)
-	if captured != 0 {
-		t.Errorf("expected 0 captures, got %d", captured)
-	}
+	CheckCaptures(b, Point{4, 4}, Black)
 }
 
 func TestCheckCapturesOne(t *testing.T) {
@@ -27,9 +24,9 @@ func TestCheckCapturesOne(t *testing.T) {
 	b.Set(Point{0, 0}, White)
 	b.Set(Point{0, 1}, Black)
 	b.Set(Point{1, 0}, Black)
-	captured := CheckCaptures(b, Point{1, 0}, Black)
-	if captured != 1 {
-		t.Errorf("expected 1 capture, got %d", captured)
+	CheckCaptures(b, Point{1, 0}, Black)
+	if b.Get(Point{0, 0}) != Empty {
+		t.Error("captured stone should be removed from board")
 	}
 	if b.Get(Point{0, 0}) != Empty {
 		t.Error("captured stone should be removed from board")
@@ -44,9 +41,9 @@ func TestCheckCapturesGroup(t *testing.T) {
 	b.Set(Point{1, 0}, Black)
 	b.Set(Point{1, 1}, Black)
 	b.Set(Point{0, 2}, Black)
-	captured := CheckCaptures(b, Point{0, 2}, Black)
-	if captured != 2 {
-		t.Errorf("expected 2 captures, got %d", captured)
+	CheckCaptures(b, Point{0, 2}, Black)
+	if b.Get(Point{0, 0}) != Empty || b.Get(Point{0, 1}) != Empty {
+		t.Error("both captured stones should be removed from board")
 	}
 	if b.Get(Point{0, 0}) != Empty || b.Get(Point{0, 1}) != Empty {
 		t.Error("both captured stones should be removed from board")

@@ -26,15 +26,19 @@ func CheckSuicide(b *Board, p Point, color Color) bool {
 }
 
 func CheckKo(g *Game, snap [][]Color) bool {
-	if g.PrevBoard == nil {
+	if g.History == nil {
 		return false
 	}
 	gameSize := g.Board.Size
-	prevBoard := g.PrevBoard
-	for i := 0; i < gameSize; i++ {
-		for j := 0; j < gameSize; j++ {
-			if prevBoard[i][j] != snap[i][j] {
-				return false
+	
+	history := g.History
+
+	for _, prevBoard := range history {
+		for i := 0; i < gameSize; i++ {
+			for j := 0; j < gameSize; j++ {
+				if prevBoard[i][j] != snap[i][j] {
+					return false
+				}
 			}
 		}
 	}

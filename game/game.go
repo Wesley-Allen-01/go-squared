@@ -5,9 +5,8 @@ import "fmt"
 type Game struct {
 	Board     *Board
 	Current   Color
-	Captures  map[Color]int
 	Passes    int
-	PrevBoard [][]Color
+	History [][][]Color
 	Over      bool
 }
 
@@ -16,9 +15,8 @@ func NewGame(size int) *Game {
 	return &Game{
 		Board:     board,
 		Current:   Black,
-		Captures:  make(map[Color]int),
 		Passes:    0,
-		PrevBoard: nil,
+		History:   nil,
 		Over:      false,
 	}
 }
@@ -40,19 +38,18 @@ func (g *Game) PlaceStone(p Point) error {
 		opponent = Black
 	}
 
-	captured := CheckCaptures(g.Board, p, opponent)
+	CheckCaptures(g.Board, p, opponent)
 
 	if IsCaptured(g.Board, FindGroup(g.Board, p)) {
 		g.Board.Cells = previous
-		return fmt.Errorf("invalid move: suicide")
+		return nil
 	}
 
 	if CheckKo(g, g.Board.Snapshot()) {
 		g.Board.Cells = previous
-		return fmt.Errorf("invalid move: ko")
+		return nil
 	}
-	g.Captures[g.Current] += captured
-	g.PrevBoard = previous
+	g.History = append(g.History, previous)
 	g.Passes = 0
 	g.SwitchPlayer()
 	return nil

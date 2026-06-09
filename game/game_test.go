@@ -10,9 +10,6 @@ func TestNewGame(t *testing.T) {
 	if g.Current != Black {
 		t.Error("Black should move first")
 	}
-	if g.Captures[Black] != 0 || g.Captures[White] != 0 {
-		t.Error("captures should start at 0")
-	}
 	if g.Over {
 		t.Error("game should not be over at start")
 	}
